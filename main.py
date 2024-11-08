@@ -3,8 +3,8 @@ import sqlite3
 import os
 import shutil
 import subprocess
-import shlex
 from enum import Enum
+
 BACKUP_DIRECTORY = "~/Library/Application Support/MobileSync/Backup/"
 BACKUP_DIRECTORY = os.path.expanduser(BACKUP_DIRECTORY)
 
@@ -38,19 +38,17 @@ class File():
         
         sub_directory = self.fileID[:2]
         
-        source_path = os.path.abspath(os.path.join(backup_directory, sub_directory, self.relativePath))
-        destination_path = os.path.abspath(os.path.join(output_directory, self.relativePath))
+        source_path = os.path.abspath(os.path.join(backup_directory, sub_directory, self.fileID))
+        destination_path = os.path.abspath(os.path.join(output_directory, self.file_name))
         
-        print(source_path, destination_path)
-        return
         try:
             if os.path.exists(source_path):  # Check if source file exists
                 subprocess.run(["cp", source_path, destination_path], check=True)
-                print(f"Copied: {self.relativePath}")
+                print(f"Copied {source_path} to {destination_path}.")
             else:
-                print(f"Source file not found: {self.source_path}")
+                print(f"Source file not found: {source_path}")
         except subprocess.CalledProcessError as e:
-            print(f"Error copying {self.source_path} to {destination_path}: {e}")
+            print(f"Error copying {source_path} to {destination_path}: {e}")
         
     @property
     def size(self):
@@ -103,6 +101,7 @@ def get_files(database: str, domains: list = None, extensions: list = None):
     ]
     
     return files
+
 def extract_media(backup_directory:str, output_directory:str = None, domains:list = None,extensions:list = None, remove_backup:bool = False):
     
     if domains and Domain.ALL in domains:
@@ -123,7 +122,7 @@ def extract_media(backup_directory:str, output_directory:str = None, domains:lis
         file.move_file(backup_directory,output_directory)
     
     if remove_backup:
-        os.rmdir(backup_directory)
+        shutil.rmtree(backup_directory)
 
 
 desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
