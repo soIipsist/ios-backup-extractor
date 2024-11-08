@@ -36,7 +36,7 @@ The following command-line arguments can be used to customize the behavior of th
 ## Usage Example
 
 ```bash
-python script.py -b /path/to/backup_directory -o /path/to/output_directory -d Domain.FILES Domain.PHOTOS -e mp4 jpg -r True
+python extract.py -b /path/to/backup_directory -o /path/to/output_directory -d Domain.FILES Domain.PHOTOS -e mp4 jpg -r True
 ```
 
 - **`-b`**: Path to the iOS backup directory.
