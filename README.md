@@ -10,7 +10,7 @@ The following command-line arguments can be used to customize the behavior of th
 
 - **`-b` / `--backup_directory`**  
   **Type**: `str`  
-  **Default**: `get_default_backup_directory()`  
+  **Default**: The first directory in the `backup` directory.
   **Description**: Specifies the path to the iOS backup directory. If not provided, the default backup directory will be used.
 
 - **`-o` / `--output_directory`**  
@@ -31,7 +31,7 @@ The following command-line arguments can be used to customize the behavior of th
 - **`-r` / `--remove_backup`**  
   **Type**: `bool`  
   **Default**: `False`  
-  **Description**: If `True`, the script will remove the original backup files after processing them
+  **Description**: If `True`, the script will remove the original backup files after processing them.
   
 ## Usage Example
 
