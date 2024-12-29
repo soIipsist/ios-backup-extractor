@@ -10,7 +10,7 @@ The following command-line arguments can be used to customize the behavior of th
 
 - **`-b` / `--backup_directory`**  
   **Type**: `str`  
-  **Default**: The first directory in the `backup` directory.
+  **Default**: The most recently created backup directory (located by default in `~/Library/Application Support/MobileSync/Backup/`).
   **Description**: Specifies the path to the iOS backup directory. If not provided, the default backup directory will be used.
 
 - **`-o` / `--output_directory`**  
@@ -36,7 +36,7 @@ The following command-line arguments can be used to customize the behavior of th
 ## Usage Example
 
 ```bash
-python extract.py -b /path/to/backup_directory -o /path/to/output_directory -d Domain.FILES Domain.PHOTOS -e mp4 jpg -r True
+python extract.py -b /path/to/backup_directory -o /path/to/output_directory -d files photos -e mp4 jpg -r True
 ```
 
 - **`-b`**: Path to the iOS backup directory.
