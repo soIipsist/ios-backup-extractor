@@ -147,7 +147,7 @@ def extract_media(
     if not os.path.isdir(
         backup_directory
     ):  # this is not a valid director, so it must be a name
-        backup_directory = os.path.join(BACKUP_DIRECTORY, backup_directory)
+        raise FileNotFoundError(f"{backup_directory} does not exist.")
 
     # make a connection to the .sql file within the backup directory
     database = os.path.join(backup_directory, "Manifest.db")
@@ -225,6 +225,4 @@ parser.add_argument(
 )
 
 args = vars(parser.parse_args())
-
-print(args)
-# extract_media(**args)
+extract_media(**args)
