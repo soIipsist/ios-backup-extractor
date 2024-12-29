@@ -17,6 +17,15 @@ class Domain(str, Enum):
     PHOTOS = "CameraRollDomain"
 
 
+DOMAIN_MAP = {
+    "all": Domain.ALL,
+    "files": Domain.FILES,
+    "media": Domain.MEDIA,
+    "books": Domain.BOOKS,
+    "photos": Domain.PHOTOS,
+}
+
+
 class File:
     fileID = None
     domain = None
@@ -167,6 +176,16 @@ def valid_directory(value):
     return value
 
 
+def parse_domain(value: str):
+    value = value.lower()
+    if value in DOMAIN_MAP:
+        return DOMAIN_MAP[value]
+    else:
+        raise argparse.ArgumentTypeError(
+            f"Invalid domain '{value}'. Valid options are: {', '.join(DOMAIN_MAP.keys())}"
+        )
+
+
 parser.add_argument(
     "-b",
     "--backup_directory",
@@ -186,6 +205,7 @@ parser.add_argument(
     "-d",
     "--domains",
     nargs="?",
+    type=parse_domain,
     default=[Domain.FILES],
     help="Specifies the domains (e.g., `Domain.FILES`, `Domain.PHOTOS`)",
 )
@@ -205,4 +225,6 @@ parser.add_argument(
 )
 
 args = vars(parser.parse_args())
-extract_media(**args)
+
+print(args)
+# extract_media(**args)
