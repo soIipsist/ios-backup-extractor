@@ -73,23 +73,24 @@ class File:
 
 
 def get_default_backup_directory():
-    backup_root = os.path.join(os.getcwd(), "backup")
+    # Ensure the directory exists
+    if not os.path.exists(BACKUP_DIRECTORY):
+        raise FileNotFoundError(f"{BACKUP_DIRECTORY} does not exist.")
 
-    if not os.path.isdir(backup_root):
-        raise ValueError("Backup directory not found.")
-
+    # List all subdirectories
     sub_dirs = [
-        d
-        for d in os.listdir(backup_root)
-        if os.path.isdir(os.path.join(backup_root, d))
+        os.path.join(BACKUP_DIRECTORY, d)
+        for d in os.listdir(BACKUP_DIRECTORY)
+        if os.path.isdir(os.path.join(BACKUP_DIRECTORY, d))
     ]
 
     if not sub_dirs:
         raise ValueError("No subdirectories found in the backup directory.")
 
-    default_backup_directory = os.path.join(backup_root, sub_dirs[0])
+    # Sort subdirectories by creation time (ctime)
+    most_recent_dir = max(sub_dirs, key=lambda d: os.path.getctime(d))
 
-    return default_backup_directory
+    return most_recent_dir
 
 
 def map_sqlite_results_to_objects(sqlite_results: list, object_type):
@@ -159,12 +160,19 @@ desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
 description = "Extracts media files from an iOS backup directory, and transfers them to a specified destination directory"
 parser = argparse.ArgumentParser(description=description)
 
+
+def valid_directory(value):
+    if not os.path.isdir(value):
+        raise argparse.ArgumentTypeError(f"Invalid directory: {value}")
+    return value
+
+
 parser.add_argument(
     "-b",
     "--backup_directory",
-    type=str,
+    type=valid_directory,
     default=get_default_backup_directory(),
-    help="Path to the iOS backup directory. If not provided, the first directory within the current working directory's 'backup' folder will be used by default",
+    help="Path to the iOS backup directory",
 )
 parser.add_argument(
     "-o",
@@ -197,5 +205,4 @@ parser.add_argument(
 )
 
 args = vars(parser.parse_args())
-
 extract_media(**args)
